@@ -1,6 +1,6 @@
 package com.example.res.controller;
 
-import com.gmail.imlouishuh.web.ErrorResponseHandler;
+import com.gmail.imlouishuh.web.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,7 @@ class RequestBodyControllerTest {
                 .bodyValue(member)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponseHandler.ErrorResponse.class)
+                .expectBody(ErrorResponse.class)
                 .value(res -> {
                     List<String> codes = res.getCodes();
                     Assertions.assertEquals(1, codes.size());
@@ -77,7 +77,7 @@ class RequestBodyControllerTest {
                 .bodyValue(member)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponseHandler.ErrorResponse.class)
+                .expectBody(ErrorResponse.class)
                 .value(res -> {
                     List<String> codes = res.getCodes();
                     Assertions.assertEquals(2, codes.size());
@@ -101,7 +101,7 @@ class RequestBodyControllerTest {
                 .bodyValue(member)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponseHandler.ErrorResponse.class)
+                .expectBody(ErrorResponse.class)
                 .value(res -> {
                     List<String> codes = res.getCodes();
                     Assertions.assertEquals(2, codes.size());

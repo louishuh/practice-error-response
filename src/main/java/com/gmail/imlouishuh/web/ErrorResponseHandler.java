@@ -1,8 +1,5 @@
 package com.gmail.imlouishuh.web;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -65,20 +62,5 @@ public class ErrorResponseHandler {
         }
 
         return new ErrorResponse(responseCode);
-    }
-
-
-    @Getter
-    public static class ErrorResponse {
-        private final List<String> codes;
-
-        public ErrorResponse(String code) {
-            this.codes = List.of(code);
-        }
-
-        @JsonCreator
-        public ErrorResponse(@JsonProperty List<String> codes) {
-            this.codes = List.copyOf(codes);
-        }
     }
 }
