@@ -3,5 +3,30 @@ POST http://localhost:8080/books
 Content-Type: application/json
 
 {
-  "author": "John"
+  "name": "a",
+  "author": "author",
+  "addresses": [
+    {
+      "memo": " b "
+    },
+    {
+      "memo": " a    "
+    }
+  ],
+  "status": "HOT"
 }
+
+
+
+### TypeMismatchException
+GET http://localhost:8080/books/a
+
+### Min(10) - ConstraintViolationException
+GET http://localhost:8080/books/1
+
+### Min(10) - ConstraintViolationException
+GET http://localhost:8080/books?name=2
+
+### Min(10) - ConstraintViolationException
+GET http://localhost:8080/books?status=HO
+
