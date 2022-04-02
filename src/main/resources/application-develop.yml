@@ -1,0 +1,18 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    ROOT: INFO
+    web: DEBUG
+    com.example: DEBUG
+
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
+    include-stacktrace: always
+    include-exception: true

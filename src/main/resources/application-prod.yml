@@ -1,0 +1,12 @@
+logging:
+  level:
+    ROOT: INFO
+    web: INFO
+    com.example: INFO
+
+server:
+  error:
+    include-binding-errors: never
+    include-message: never
+    include-stacktrace: never
+    include-exception: false
