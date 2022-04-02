@@ -13,6 +13,7 @@ import java.util.List;
 public class RequestBodyController {
 
     private static final List<String> invalidMemberNameList;
+
     static {
         invalidMemberNameList = List.of("a", "b");
     }

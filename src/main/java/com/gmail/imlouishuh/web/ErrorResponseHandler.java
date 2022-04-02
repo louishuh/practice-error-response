@@ -1,6 +1,5 @@
 package com.gmail.imlouishuh.web;
 
-import com.example.res.controller.InvalidMemberNameException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -58,7 +57,7 @@ public class ErrorResponseHandler {
         // ResponseCode annotation의 값을 가져와 응답한다.
         ResponseCode responseCodeAnnotation = businessException.getClass().getAnnotation(ResponseCode.class);
         String responseCode;
-        if(Objects.isNull(responseCodeAnnotation)) {
+        if (Objects.isNull(responseCodeAnnotation)) {
             log.warn("response code is not defined: {}", businessException.getClass());
             responseCode = "undefined";
         } else {

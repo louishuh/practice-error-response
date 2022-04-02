@@ -13,6 +13,6 @@ import javax.validation.constraints.Pattern;
 public class RequestParamController {
 
     @GetMapping("/members")
-    public void getByRequestParam(@RequestParam @Pattern(regexp = "^1.*$") @Length(min=3) String name) {
+    public void getByRequestParam(@RequestParam @Pattern(regexp = "^1.*$") @Length(min = 3) String name) {
     }
 }

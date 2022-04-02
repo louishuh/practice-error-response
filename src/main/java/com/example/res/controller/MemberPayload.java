@@ -20,10 +20,12 @@ public class MemberPayload {
     @NotNull
     private Integer age;
 
-    @NotNull @Size(min=2)
+    @NotNull
+    @Size(min = 2)
     private List<@Valid Phone> phones;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     public static class Phone {
         @NotBlank
         private String number;
