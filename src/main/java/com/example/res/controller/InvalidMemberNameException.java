@@ -1,4 +1,8 @@
 package com.example.res.controller;
 
-public class InvalidMemberNameException extends RuntimeException {
+import com.gmail.imlouishuh.web.BusinessException;
+import com.gmail.imlouishuh.web.ResponseCode;
+
+@ResponseCode("name.Invalid")
+public class InvalidMemberNameException extends BusinessException {
 }
