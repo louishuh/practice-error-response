@@ -70,7 +70,7 @@ public class ErrorResponseHandler {
     @ExceptionHandler(BusinessException.class)
     public ErrorsResponse businessException(BusinessException businessException) {
 
-        Map<String, String> arguments = businessException.getArguments();
+        Map<String, Object> arguments = businessException.getArguments();
         JsonNode jsonNode = null;
         if (!arguments.isEmpty()) {
             jsonNode = objectMapper.valueToTree(arguments);

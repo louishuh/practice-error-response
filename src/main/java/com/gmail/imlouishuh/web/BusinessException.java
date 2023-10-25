@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class BusinessException extends RuntimeException {
     private final String code;
-    private final Map<String, String> arguments;
+    private final Map<String, Object> arguments;
 
     public BusinessException(String code) {
         this(code, null);
@@ -18,7 +18,7 @@ public class BusinessException extends RuntimeException {
         this.arguments = new HashMap<>();
     }
 
-    protected void addArgument(String key, String value) {
+    protected void addArgument(String key, Object value) {
         arguments.put(key, value);
     }
 }
