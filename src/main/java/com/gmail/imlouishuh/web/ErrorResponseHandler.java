@@ -1,7 +1,12 @@
 package com.gmail.imlouishuh.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,23 +24,30 @@ import java.util.Set;
 @RestControllerAdvice
 public class ErrorResponseHandler {
 
+    private final ObjectMapper objectMapper;
+
+    public ErrorResponseHandler() {
+        objectMapper = new ObjectMapper();
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(WebExchangeBindException.class)
-    public ErrorResponse webExchangeBindException(WebExchangeBindException exchangeBindException) {
-        List<String> codes = new ArrayList<>();
+    public ErrorsResponse webExchangeBindException(WebExchangeBindException exchangeBindException) {
+        List<ErrorResponse> errorResponseList = new ArrayList<>();
         exchangeBindException.getFieldErrors().forEach(e -> {
-            String field = e.getField();
-            String code = e.getCode();
-            codes.add(field + "." + code);
+            ObjectNode objectNode = objectMapper.createObjectNode();
+            objectNode.put("field", e.getField());
+            objectNode.put("rejectedValue", Objects.nonNull(e.getRejectedValue()) ? e.getRejectedValue().toString() : null);
+            errorResponseList.add(new ErrorResponse(e.getField() + "." +  e.getCode(), e.getDefaultMessage(), objectNode));
         });
 
-        return new ErrorResponse(codes);
+        return new ErrorsResponse(errorResponseList);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public ErrorResponse constraintViolationException(ConstraintViolationException constraintViolationException) {
-        List<String> codes = new ArrayList<>();
+    public ErrorsResponse constraintViolationException(ConstraintViolationException constraintViolationException) {
+        List<ErrorResponse> errorResponseList = new ArrayList<>();
         Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
 
         constraintViolations.forEach(violation -> {
@@ -43,24 +55,28 @@ public class ErrorResponseHandler {
             String annotationName = descriptor.getAnnotation().annotationType().getSimpleName();
             String path = violation.getPropertyPath().toString();
             String propertyPath = path.substring(path.indexOf('.') + 1);
-            codes.add(propertyPath + "." + annotationName);
+
+            String code = propertyPath + "." + annotationName;
+            String message = violation.getMessage();
+            String invalidValue = Objects.nonNull(violation.getInvalidValue()) ? violation.getInvalidValue().toString() : null;
+            ObjectNode objectNode = objectMapper.createObjectNode();
+            objectNode.put("invalidValue", invalidValue);
+            errorResponseList.add(new ErrorResponse(code, message, objectNode));
         });
-        return new ErrorResponse(codes);
+        return new ErrorsResponse(errorResponseList);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BusinessException.class)
-    public ErrorResponse businessException(BusinessException businessException) {
-        // ResponseCode annotation의 값을 가져와 응답한다.
-        ResponseCode responseCodeAnnotation = businessException.getClass().getAnnotation(ResponseCode.class);
-        String responseCode;
-        if (Objects.isNull(responseCodeAnnotation)) {
-            log.warn("response code is not defined: {}", businessException.getClass());
-            responseCode = "undefined";
-        } else {
-            responseCode = responseCodeAnnotation.value();
+    public ErrorsResponse businessException(BusinessException businessException) {
+
+        Map<String, String> arguments = businessException.getArguments();
+        JsonNode jsonNode = null;
+        if (!arguments.isEmpty()) {
+            jsonNode = objectMapper.valueToTree(arguments);
         }
 
-        return new ErrorResponse(responseCode);
+        ErrorResponse errorResponse = new ErrorResponse(businessException.getCode(), businessException.getMessage(), jsonNode);
+        return new ErrorsResponse(errorResponse);
     }
 }

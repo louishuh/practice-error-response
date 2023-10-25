@@ -22,7 +22,7 @@ public class RequestBodyController {
     public void create(@Valid @RequestBody MemberPayload memberPayload) {
 
         if (invalidMemberNameList.contains(memberPayload.getName())) {
-            throw new InvalidMemberNameException();
+            throw new InvalidMemberNameException(memberPayload.getName());
         }
 
         log.debug("member: {}", memberPayload);

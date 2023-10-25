@@ -9,7 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @Slf4j
 @WebFluxTest
-public class CommonErrorResponseTest {
+public class CommonErrorsResponseTest {
 
     @Autowired
     private WebTestClient web;

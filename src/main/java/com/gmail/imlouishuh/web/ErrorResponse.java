@@ -1,21 +1,36 @@
 package com.gmail.imlouishuh.web;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
-
+@EqualsAndHashCode(of = "code")
 @Getter
+@Setter
+@NoArgsConstructor
 public class ErrorResponse {
-    private final List<String> codes;
+
+    private String code;
+    private String message;
+    private JsonNode arguments;
 
     public ErrorResponse(String code) {
-        this.codes = List.of(code);
+        this(code, (String) null);
     }
 
-    @JsonCreator
-    public ErrorResponse(@JsonProperty List<String> codes) {
-        this.codes = List.copyOf(codes);
+    public ErrorResponse(String code, String message) {
+        this(code, message, null);
+    }
+
+    public ErrorResponse(String code, JsonNode arguments) {
+        this(code, null, arguments);
+    }
+
+    public ErrorResponse(String code, String message, JsonNode arguments) {
+        this.code = code;
+        this.message = message;
+        this.arguments = arguments;
     }
 }

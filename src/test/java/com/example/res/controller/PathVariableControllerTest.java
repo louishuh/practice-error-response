@@ -1,5 +1,7 @@
 package com.example.res.controller;
 
+import com.example.res.ObjectMapperHolder;
+import com.gmail.imlouishuh.web.ErrorsResponse;
 import com.gmail.imlouishuh.web.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -28,15 +30,18 @@ class PathVariableControllerTest {
 
     @Test
     void fail_min() {
+
         web.get().uri("/members/1")
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponse.class)
+                .expectBody(ErrorsResponse.class)
                 .value(res -> {
-                    List<String> codes = res.getCodes();
-                    Assertions.assertEquals(1, codes.size());
-                    Assertions.assertTrue(codes.contains("id.Min"));
+                    List<ErrorResponse> errorResponseList = res.getErrors();
+                    Assertions.assertEquals(1, errorResponseList.size());
+                    ErrorResponse errorResponse = errorResponseList.get(0);
+                    Assertions.assertEquals("id.Min", errorResponse.getCode());
+                    ObjectMapperHolder.printPrettyJson(res);
                 });
     }
 

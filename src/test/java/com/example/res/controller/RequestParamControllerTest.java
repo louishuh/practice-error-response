@@ -1,6 +1,7 @@
 package com.example.res.controller;
 
 import com.gmail.imlouishuh.web.ErrorResponse;
+import com.gmail.imlouishuh.web.ErrorsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,9 +33,9 @@ class RequestParamControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponse.class)
+                .expectBody(ErrorsResponse.class)
                 .value(res -> {
-                    List<String> codes = res.getCodes();
+                    List<String> codes = res.getErrors().stream().map(ErrorResponse::getCode).toList();
                     Assertions.assertEquals(2, codes.size());
                     Assertions.assertTrue(codes.contains("name.Pattern"));
                     Assertions.assertTrue(codes.contains("name.Length"));

@@ -1,5 +1,7 @@
 package com.example.res.controller;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.gmail.imlouishuh.web.ErrorsResponse;
 import com.gmail.imlouishuh.web.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -54,11 +56,16 @@ class RequestBodyControllerTest {
                 .bodyValue(member)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponse.class)
+                .expectBody(ErrorsResponse.class)
                 .value(res -> {
-                    List<String> codes = res.getCodes();
-                    Assertions.assertEquals(1, codes.size());
-                    Assertions.assertTrue(codes.contains("name.Invalid"));
+                    List<ErrorResponse> errorResponseList = res.getErrors();
+                    Assertions.assertEquals(1, errorResponseList.size());
+                    ErrorResponse errorResponse = errorResponseList.get(0);
+                    Assertions.assertEquals("name.Invalid", errorResponse.getCode());
+
+                    ObjectNode arguments = (ObjectNode) errorResponse.getArguments();
+                    String invalidName = arguments.get("invalidName").asText();
+                    Assertions.assertEquals("a", invalidName);
                 });
     }
 
@@ -77,12 +84,12 @@ class RequestBodyControllerTest {
                 .bodyValue(member)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponse.class)
+                .expectBody(ErrorsResponse.class)
                 .value(res -> {
-                    List<String> codes = res.getCodes();
-                    Assertions.assertEquals(2, codes.size());
-                    Assertions.assertTrue(codes.contains("age.NotNull"));
-                    Assertions.assertTrue(codes.contains("name.NotBlank"));
+                    List<String> errorResponseList = res.getErrors().stream().map(ErrorResponse::getCode).toList();
+                    Assertions.assertEquals(2, errorResponseList.size());
+                    Assertions.assertTrue(errorResponseList.contains("age.NotNull"));
+                    Assertions.assertTrue(errorResponseList.contains("name.NotBlank"));
                 });
     }
 
@@ -101,9 +108,9 @@ class RequestBodyControllerTest {
                 .bodyValue(member)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponse.class)
+                .expectBody(ErrorsResponse.class)
                 .value(res -> {
-                    List<String> codes = res.getCodes();
+                    List<String> codes = res.getErrors().stream().map(ErrorResponse::getCode).toList();
                     Assertions.assertEquals(2, codes.size());
                     Assertions.assertTrue(codes.contains("phones.Size"));
                     Assertions.assertTrue(codes.contains("phones[0].number.NotBlank"));
