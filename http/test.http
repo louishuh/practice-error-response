@@ -30,3 +30,5 @@ GET http://localhost:8080/books?name=2
 ### Min(10) - ConstraintViolationException
 GET http://localhost:8080/books?status=HO
 
+### 타입 오류
+GET http://localhost:8080/members/d

@@ -1,5 +1,6 @@
 package com.example.res.controller;
 
+import com.example.res.ObjectMapperHolder;
 import com.gmail.imlouishuh.web.ErrorResponse;
 import com.gmail.imlouishuh.web.ErrorsResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @WebFluxTest
-@AutoConfigureWebTestClient(timeout = "86400") // 하루
+@AutoConfigureWebTestClient(timeout = "86400000") // 하루
 class RequestParamControllerTest {
 
     @Autowired
@@ -41,6 +42,7 @@ class RequestParamControllerTest {
                     Assertions.assertEquals(2, codes.size());
                     Assertions.assertTrue(codes.contains("name.Pattern"));
                     Assertions.assertTrue(codes.contains("name.Length"));
+                    ObjectMapperHolder.printPrettyJson(res);
                 });
     }
 }

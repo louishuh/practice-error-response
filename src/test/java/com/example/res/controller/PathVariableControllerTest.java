@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @WebFluxTest
-@AutoConfigureWebTestClient(timeout = "86400") // 하루
+@AutoConfigureWebTestClient(timeout = "86400000") // 하루
 class PathVariableControllerTest {
 
     @Autowired

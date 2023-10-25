@@ -1,5 +1,6 @@
 package com.example.res.controller;
 
+import com.example.res.ObjectMapperHolder;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gmail.imlouishuh.web.ErrorsResponse;
 import com.gmail.imlouishuh.web.ErrorResponse;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @WebFluxTest
-@AutoConfigureWebTestClient(timeout = "86400") // 하루
+@AutoConfigureWebTestClient(timeout = "86400000") // 하루
 class RequestBodyControllerTest {
 
     @Autowired
@@ -68,6 +69,7 @@ class RequestBodyControllerTest {
                     ObjectNode arguments = (ObjectNode) errorResponse.getArguments();
                     String invalidName = arguments.get("invalidName").asText();
                     Assertions.assertEquals("a", invalidName);
+                    ObjectMapperHolder.printPrettyJson(res);
                 });
     }
 
@@ -92,6 +94,7 @@ class RequestBodyControllerTest {
                     Assertions.assertEquals(2, errorResponseList.size());
                     Assertions.assertTrue(errorResponseList.contains("age.NotNull"));
                     Assertions.assertTrue(errorResponseList.contains("name.NotBlank"));
+                    ObjectMapperHolder.printPrettyJson(res);
                 });
     }
 
@@ -116,6 +119,7 @@ class RequestBodyControllerTest {
                     Assertions.assertEquals(2, codes.size());
                     Assertions.assertTrue(codes.contains("phones.Size"));
                     Assertions.assertTrue(codes.contains("phones[0].number.NotBlank"));
+                    ObjectMapperHolder.printPrettyJson(res);
                 });
     }
 }
